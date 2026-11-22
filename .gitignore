@@ -1,0 +1,13 @@
+# Never commit secrets or player work
+.env
+.env.*
+*.key
+
+# Python and Node
+__pycache__/
+*.pyc
+.venv/
+node_modules/
+
+# OS and editors
+.DS_Store
