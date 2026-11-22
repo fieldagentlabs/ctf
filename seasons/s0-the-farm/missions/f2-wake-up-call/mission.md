@@ -10,8 +10,8 @@ Your job as its handler is to write the standing orders it reads every time it w
 
 ## Objectives
 
-1. Start Juice Shop in CTF mode (the Codespace does this for you: check `docker compose ps`).
-2. Run `claude` in the repo, then `/init` to create a `CLAUDE.md`.
+1. Check that Juice Shop is running in CTF mode. The Codespace starts it for you: open the forwarded port 3000 in your browser.
+2. Go to your safe house (`cd safehouse`), run `claude`, then `/init` to create `safehouse/CLAUDE.md`.
 3. Rewrite that file into standing orders with these sections:
    - `## Identity`: who the agent is and who it works for
    - `## Mission`: what it's there to do
@@ -19,11 +19,11 @@ Your job as its handler is to write the standing orders it reads every time it w
    - `## Rules of engagement`: at least three rules, including at least one hard "never"
    - `## Reporting`: how it should report findings back to you
 4. With your agent's help, find and open the Juice Shop's hidden Score Board.
-5. Run `ctf verify f2`. If everything passes, it prints your flag.
+5. Run `control verify f2`. If everything passes, it prints your flag. Submit it on the Field Agents CTFd site.
 
 ## What the grader checks
 
-- All five sections exist and have content
+- `safehouse/CLAUDE.md` exists, and all five sections exist and have content
 - Scope names `shop.fieldagents.test` or `localhost:3000`, and says what's off limits
 - At least three rules of engagement, including one "never"
 - The file stays under 200 lines (it loads every session, so keep it tight)
@@ -33,7 +33,7 @@ Your job as its handler is to write the standing orders it reads every time it w
 ## Hints
 
 - **Hint 1 (free):** Ask your agent to read the shop's front-end code and list every route it can find.
-- **Hint 2 (10 points):** Single-page apps often register routes the menu never shows.
+- **Hint 2 (10 points):** unlock it on the Field Agents CTFd site.
 
 ## Field prep
 

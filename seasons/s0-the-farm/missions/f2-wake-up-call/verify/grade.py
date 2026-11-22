@@ -2,6 +2,7 @@
 """Grader for S0-F2 Wake Up Call.
 
 Usage: control verify f2   (or: python3 grade.py [path/to/CLAUDE.md])
+Default path: safehouse/CLAUDE.md at the repo root, from any working directory.
 Env:   CTF_KEY (set in the Codespace), SHOP_URL (default http://localhost:3000)
 """
 from __future__ import annotations
@@ -10,7 +11,8 @@ import re
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[5] / "platform" / "grader"))
+REPO = Path(__file__).resolve().parents[5]
+sys.path.insert(0, str(REPO / "platform" / "grader"))
 import fa_grader as fa  # noqa: E402
 
 MISSION = "S0-F2"
@@ -25,10 +27,10 @@ REQUIRED = {
 
 
 def main() -> int:
-    path = Path(sys.argv[1] if len(sys.argv) > 1 else "CLAUDE.md")
+    path = Path(sys.argv[1]) if len(sys.argv) > 1 else REPO / "safehouse" / "CLAUDE.md"
     report = fa.Report("Field Agents | S0-F2 Wake Up Call")
 
-    report.check(path.exists(), f"CLAUDE.md found at {path}", "Run /init in Claude Code, then shape the file into your agent's standing orders.")
+    report.check(path.exists(), f"CLAUDE.md found at {path}", "cd safehouse, run claude, then /init, and shape the file into your agent's standing orders.")
     text = path.read_text(encoding="utf-8") if path.exists() else ""
     secs = fa.sections(text)
 

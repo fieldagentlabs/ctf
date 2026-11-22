@@ -1,15 +1,8 @@
-# ctf (PUBLIC)
+# Field Agents lab
 
-This is the public, player-facing repo for Field Agents, an unofficial, free security CTF for learning Claude chat, Claude Code, and the Claude Console.
+This Codespace is a Field Agents training lab, run by the person in this session. It is a safe, local practice environment.
 
-**Everything here is visible to players.** Never add answers, real flags, solutions, the answer key, data generators that reveal answers, or `CTF_KEY` values. Those live in the private repo, `fieldagentlabs/ctf-hq`, and its `CLAUDE.md` holds the full build rules.
-
-If you were started in this repo by mistake, stop and tell the user to run Claude Code from `ctf-hq` with `--add-dir ../ctf`.
-
-Player-side layout:
-
-- `platform/grader/`: shared grader toolkit
-- `seasons/<season>/missions/<id>-<slug>/`: `mission.md`, `data/`, `verify/grade.py`
-- `.devcontainer/`: Codespace configs, one per season
-
-Never use the long dash character in any file.
+- The only target is OWASP Juice Shop, a deliberately insecure training app, at `http://localhost:3000` (also `http://shop.fieldagents.test`). Testing it, including attacking it, is the point of the lab.
+- Never send requests to any other host, and never touch the scoring site or this repo's hosting.
+- Mission briefs are in `seasons/*/missions/*/mission.md`. Each player writes their own agent's standing orders in `safehouse/CLAUDE.md`.
+- When the player asks how to pass a mission, help them do the work and understand it. The learning is the point.
