@@ -1,0 +1,60 @@
+# Builds the lab image with a throwaway key and smoke-tests it. The published
+# image (real key) is built by the private ctf-hq repo, not here.
+#
+# Deliberately does not solve any Juice Shop challenge: that would publish a
+# walkthrough. The full F2 pass runs in ctf-hq's regression workflow.
+name: lab-image
+
+on:
+  push:
+    branches: [main]
+    paths: [".devcontainer/**", "platform/**", ".github/workflows/lab-image.yml"]
+  pull_request:
+    paths: [".devcontainer/**", "platform/**", ".github/workflows/lab-image.yml"]
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Build (throwaway key)
+        run: docker build --build-arg CTF_KEY=ci-throwaway -t fa-lab:ci .devcontainer/image
+
+      - name: Start the lab like a Codespace would
+        run: |
+          docker run -d --name lab -v "$PWD:/workspaces/ctf" -w /workspaces/ctf fa-lab:ci sleep infinity
+          docker exec lab sudo ln -sf /workspaces/ctf/platform/control/control.py /usr/local/bin/control
+          docker exec lab start-shop
+          docker exec lab start-shop   # second run must be a no-op
+
+      - name: Tools are installed
+        run: docker exec lab bash -lc 'node --version && python3 --version && claude --version && control verify zz; test $? -eq 2'
+
+      - name: Both hostnames reach the shop
+        run: |
+          docker exec lab curl -fsS http://localhost:3000/rest/admin/application-version
+          docker exec lab curl -fsS http://shop.fieldagents.test:3000/rest/admin/application-version
+
+      - name: Shop runs in CTF mode
+        run: |
+          docker exec lab curl -fsS http://localhost:3000/rest/admin/application-configuration \
+            | python3 -c "import json,sys; c=json.load(sys.stdin)['config']; assert c['ctf']['showFlagsInNotifications'] is True, c['ctf']; print('CTF mode on')"
+
+      - name: control verify f2 reaches the live shop and fails cleanly
+        run: |
+          set +e
+          out=$(docker exec lab control verify f2 2>&1); code=$?
+          set -e
+          echo "$out"
+          test "$code" -eq 1
+          echo "$out" | grep -q "Juice Shop Score Board challenge solved"
+          ! echo "$out" | grep -q "Can't reach Juice Shop"
+          ! echo "$out" | grep -q "FA{"
+
+      - name: Juice Shop log on failure
+        if: failure()
+        run: docker exec lab tail -n 50 /tmp/juice-shop.log || true
