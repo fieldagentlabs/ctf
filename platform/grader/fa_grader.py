@@ -5,6 +5,7 @@ Supports Python 3.9 and newer.
 """
 from __future__ import annotations
 
+import base64
 import hashlib
 import hmac
 import json
@@ -36,6 +37,12 @@ def mission_flag(mission_id: str) -> str:
     digest = hmac.new(ctf_key().encode(), mission_id.encode(), hashlib.sha256).hexdigest()[:12]
     season, mission = mission_id.lower().split("-")
     return f"FA{{{season}_{mission}_{digest}}}"
+
+
+def coupon(mission_id: str = "S1-P4A") -> str:
+    """P4's coupon code: JUICY-GUARD- plus 4 base32 characters derived from CTF_KEY (D11b)."""
+    digest = hmac.new(ctf_key().encode(), f"{mission_id}:coupon".encode(), hashlib.sha256).digest()
+    return "JUICY-GUARD-" + base64.b32encode(digest).decode()[:4]
 
 
 def shop_url() -> str:
