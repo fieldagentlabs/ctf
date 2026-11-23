@@ -1,0 +1,5 @@
+# Python packages the graders need in the lab image (pinned).
+# K5 Catch Yourself: pySigma 2.1.0 is the first release with sigma.matching (SigmaMatcher).
+pySigma==2.1.0
+# pySigma 2.1.0 imports typing_extensions without declaring it.
+typing_extensions==4.16.0

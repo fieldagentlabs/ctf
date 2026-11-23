@@ -56,6 +56,11 @@ COPY gen-dist-locations.py /tmp/gen-dist-locations.py
 RUN python3 /tmp/gen-dist-locations.py /opt/juice-shop/frontend/dist/frontend /etc/nginx/fieldagents-dist.conf \
     && rm /tmp/gen-dist-locations.py && nginx -t
 
+# Grader dependencies (pinned): pySigma for K5.
+COPY requirements-graders.txt /tmp/requirements-graders.txt
+RUN pip install --no-cache-dir -r /tmp/requirements-graders.txt && rm /tmp/requirements-graders.txt \
+    && python3 -c "import sigma.matching, importlib.metadata as m; print('pySigma', m.version('pySigma'))"
+
 COPY start-shop.sh /usr/local/bin/start-shop
 COPY restart-shop.sh /usr/local/bin/restart-shop
 COPY deploy-shop.sh /usr/local/bin/deploy-shop

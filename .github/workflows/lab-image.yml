@@ -32,7 +32,9 @@ jobs:
           docker exec lab start-shop   # second run must be a no-op
 
       - name: Tools are installed
-        run: docker exec lab bash -lc 'node --version && python3 --version && claude --version && control verify zz; test $? -eq 2'
+        run: |
+          docker exec lab bash -lc 'node --version && python3 --version && claude --version && control verify zz; test $? -eq 2'
+          docker exec lab python3 -c "import sigma.matching, importlib.metadata as m; assert m.version('pySigma') == '2.1.0'; print('pySigma 2.1.0')"
 
       - name: Both hostnames reach the shop
         run: |
