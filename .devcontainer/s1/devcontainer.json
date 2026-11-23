@@ -1,0 +1,22 @@
+{
+  "name": "Field Agents: Season 1 (Operation Juice Shop)",
+  // Built and published from .devcontainer/image by the private ctf-hq repo.
+  // One shared image for both seasons while there is a single CTF_KEY (D2).
+  "image": "ghcr.io/fieldagentlabs/fa-lab:v1",
+  "hostRequirements": { "cpus": 2 },
+  "forwardPorts": [3000],
+  "portsAttributes": {
+    "3000": { "label": "Juice Shop", "onAutoForward": "notify" }
+  },
+  "postCreateCommand": "sudo ln -sf ${containerWorkspaceFolder}/platform/control/control.py /usr/local/bin/control",
+  "postStartCommand": "start-shop",
+  "secrets": {
+    "ANTHROPIC_API_KEY": {
+      "description": "Optional. Your own Claude Console API key, with a spending limit set. Not needed if you sign in to Claude Code with a Claude plan."
+    }
+  },
+  "customizations": {
+    "codespaces": { "openFiles": ["safehouse/README.md"] },
+    "vscode": { "extensions": ["ms-python.python"] }
+  }
+}

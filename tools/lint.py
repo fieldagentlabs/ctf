@@ -23,6 +23,14 @@ BINARY = {".png", ".jpg", ".jpeg", ".gif", ".pdf", ".gz", ".zip", ".ico", ".woff
 SKIP = {"platform/grader/tests/test_fa_grader.py"}  # holds fake secrets on purpose
 
 
+KEY_PLACEHOLDER = re.compile(r"CTF_KEY\s*=\s*[\"']?(\$\S*|[A-Za-z0-9_-]{1,19}[\"']?)\s*\\?$")
+
+
+def real_secrets(line: str) -> list:
+    """Like fa.find_secrets, but a CTF_KEY set to a $VARIABLE or a short dummy is fine in repo files."""
+    return [s for s in fa.find_secrets(line) if not KEY_PLACEHOLDER.fullmatch(s)]
+
+
 def tracked_files() -> list:
     out = subprocess.run(["git", "ls-files", "-z"], cwd=ROOT, capture_output=True, text=True, check=True).stdout
     return [p for p in out.split("\0") if p]
@@ -40,7 +48,7 @@ def main() -> int:
                 problems.append(f"{rel}:{n}: long dash (use a comma, colon, parentheses, or a new sentence)")
             if REAL_FLAG.search(line):
                 problems.append(f"{rel}:{n}: looks like a real flag")
-            if rel not in SKIP and fa.find_secrets(line):
+            if rel not in SKIP and real_secrets(line):
                 problems.append(f"{rel}:{n}: looks like a key or token")
         if path.name == "mission.md" and DISCLAIMER not in text:
             problems.append(f"{rel}: missing the unofficial disclaimer")
