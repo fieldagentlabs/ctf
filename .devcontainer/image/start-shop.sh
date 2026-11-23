@@ -15,7 +15,9 @@ if curl -fs "${READY_URL}" >/dev/null 2>&1; then
 fi
 
 cd /opt/juice-shop
-nohup node build/app.js >"${LOG}" 2>&1 &
+# setsid detaches Juice Shop from this script's session: Codespaces kills a
+# lifecycle command's processes when it finishes, and plain nohup is not enough.
+setsid nohup node build/app.js >"${LOG}" 2>&1 < /dev/null &
 
 for _ in $(seq 1 90); do
   if curl -fs "${READY_URL}" >/dev/null 2>&1; then
