@@ -66,8 +66,12 @@ def build() -> str:
     for item in SHOP.iterdir():
         if item.name in ("node_modules", "frontend"):
             (BUILD / item.name).symlink_to(item)
-        elif item.name != "build":
-            (shutil.copytree if item.is_dir() else shutil.copy2)(item, BUILD / item.name, symlinks=True)
+        elif item.name == "build":
+            continue
+        elif item.is_dir() and not item.is_symlink():
+            shutil.copytree(item, BUILD / item.name, symlinks=True)
+        else:
+            shutil.copy2(item, BUILD / item.name, follow_symlinks=False)
     archive = subprocess.run(["git", "-C", str(SRC), "archive", PINNED, "--", *SERVER_PARTS], capture_output=True)
     if archive.returncode != 0:
         return f"Couldn't read commit {PINNED[:7]} from {SRC}. Run: git -C {SRC} fetch origin"
