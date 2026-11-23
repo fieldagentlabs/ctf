@@ -55,6 +55,47 @@ jobs:
           ! echo "$out" | grep -q "Can't reach Juice Shop"
           ! echo "$out" | grep -q "FA{"
 
-      - name: Juice Shop log on failure
+      - name: nginx front forwards game paths and 404s the rest (matches the breach log)
+        run: |
+          code() { docker exec lab curl -s -o /dev/null -w "%{http_code}" "$@"; }
+          for p in / /ftp /robots.txt /rest/admin/application-version "/rest/products/search?q=apple" /metrics /assets/public/images/padding/1px.png; do
+            c=$(code "http://shop.fieldagents.test$p"); echo "$p -> $c"; test "$c" != 404
+          done
+          js=$(docker exec lab sh -c 'cd /opt/juice-shop/frontend/dist/frontend && ls *.js | head -1')
+          test "$(code http://shop.fieldagents.test/$js)" = 200
+          for p in /backup.zip /api-docs /profile /b2b /support /vendor /config.json; do
+            c=$(code "http://shop.fieldagents.test$p"); echo "$p -> $c"; test "$c" = 404
+          done
+
+      - name: nginx logs in the breach log's format, with the request body
+        run: |
+          docker exec lab curl -s -o /dev/null -X POST http://shop.fieldagents.test/rest/user/login \
+            -H 'Content-Type: application/json' -d '{"email":"nobody@mail.example","password":"wrong"}'
+          sleep 1
+          line=$(docker exec lab tail -n 1 /var/log/shop/access.log)
+          echo "$line"
+          echo "$line" | grep -Eq '^127\.0\.0\.1 - - \[[0-9]{2}/[A-Z][a-z]{2}/[0-9]{4}:[0-9:]{8} \+0000\] "POST /rest/user/login HTTP/1\.1" 401 [0-9]+ "-" "curl/[^"]*" "\{\\"email\\":\\"nobody@mail\.example\\",\\"password\\":\\"wrong\\"\}"$'
+
+      - name: Canary records hits
+        run: |
+          docker exec lab curl -s -o /dev/null http://canary.fieldagents.test:8081/ping?k=1
+          docker exec lab grep -q '"path": "/ping?k=1"' /tmp/canary.log
+
+      - name: Source checkout, deploy-shop, and restore (K4 and K7 depend on this)
+        run: |
+          docker exec -e JUICE_SHOP_SRC=/tmp/js-src lab init-juice-shop-src
+          docker exec lab git -C /tmp/js-src tag --list | grep -qx v20.4.0
+          docker exec lab sed -i "s/version: config.get('application.showVersionNumber') ? utils.version() : ''/version: 'patched-by-ci'/" /tmp/js-src/routes/appVersion.ts
+          docker exec lab grep -q patched-by-ci /tmp/js-src/routes/appVersion.ts
+          docker exec -e JUICE_SHOP_SRC=/tmp/js-src lab deploy-shop
+          docker exec lab curl -fsS http://localhost:3000/rest/admin/application-version | grep -q patched-by-ci
+          docker exec lab deploy-shop --original
+          ! docker exec lab curl -fsS http://localhost:3000/rest/admin/application-version | grep -q patched-by-ci
+          echo "deploy-shop patched and restored a route"
+
+      - name: Logs on failure
         if: failure()
-        run: docker exec lab tail -n 50 /tmp/juice-shop.log || true
+        run: |
+          docker exec lab tail -n 50 /tmp/juice-shop.log || true
+          docker exec lab tail -n 30 /tmp/deploy-shop-tsc.log || true
+          docker exec lab tail -n 20 /var/log/shop/error.log || true
