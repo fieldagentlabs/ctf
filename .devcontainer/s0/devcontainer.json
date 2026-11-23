@@ -4,6 +4,10 @@
   // One shared image for both seasons while there is a single CTF_KEY (D2).
   "image": "ghcr.io/fieldagentlabs/fa-lab:v1",
   "hostRequirements": { "cpus": 2 },
+  // SSH lets `gh codespace ssh` work (maintainer tests, and players who prefer a local terminal).
+  "features": {
+    "ghcr.io/devcontainers/features/sshd:1.1.0": {}
+  },
   "forwardPorts": [3000],
   "portsAttributes": {
     "3000": { "label": "Juice Shop", "onAutoForward": "notify" }
