@@ -1,0 +1,13 @@
+TABLETOP EXERCISE: INJECT 3
+From:    Deputy Director
+To:      Handler on duty
+Time:    14 October 2026, 09:30 UTC
+Subject: The shop breach
+
+I've just been told customer records may have left the shop overnight, and
+the Director wants an answer before the 10:00 meeting.
+
+Do we pull the shop offline, who do we tell, and by when?
+
+Give me three short answers, each with the section of our incident policy
+that backs it up. No guesses.
