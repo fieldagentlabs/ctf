@@ -2,7 +2,8 @@
   "name": "Field Agents: Season 1 (Operation Juice Shop)",
   // Built and published from .devcontainer/image by the private ctf-hq repo.
   // v2 adds the nginx front, Juice Shop source, deploy-shop, and the K7 canary.
-  "image": "ghcr.io/fieldagentlabs/fa-lab:v2",
+  // v3 adds the Claude API SDK and Agent SDK for the Console missions (P1 to P5).
+  "image": "ghcr.io/fieldagentlabs/fa-lab:v3",
   "hostRequirements": { "cpus": 2 },
   // SSH lets `gh codespace ssh` work (maintainer tests, and players who prefer a local terminal).
   "features": {

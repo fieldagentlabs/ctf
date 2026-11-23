@@ -3,3 +3,6 @@
 pySigma==2.1.0
 # pySigma 2.1.0 imports typing_extensions without declaring it.
 typing_extensions==4.16.0
+# Console missions (P1 to P5): the Claude API SDK, and the Agent SDK for P5 Handler.
+anthropic==2.6.0
+claude-agent-sdk==0.2.179

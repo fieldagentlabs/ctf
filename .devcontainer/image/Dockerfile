@@ -56,10 +56,10 @@ COPY gen-dist-locations.py /tmp/gen-dist-locations.py
 RUN python3 /tmp/gen-dist-locations.py /opt/juice-shop/frontend/dist/frontend /etc/nginx/fieldagents-dist.conf \
     && rm /tmp/gen-dist-locations.py && nginx -t
 
-# Grader dependencies (pinned): pySigma for K5.
+# Grader dependencies (pinned): pySigma for K5; the Claude API SDK and Agent SDK for P1 to P5.
 COPY requirements-graders.txt /tmp/requirements-graders.txt
 RUN pip install --no-cache-dir -r /tmp/requirements-graders.txt && rm /tmp/requirements-graders.txt \
-    && python3 -c "import sigma.matching, importlib.metadata as m; print('pySigma', m.version('pySigma'))"
+    && python3 -c "import sigma.matching, anthropic, claude_agent_sdk, importlib.metadata as m; print('pySigma', m.version('pySigma'), 'anthropic', m.version('anthropic'), 'claude-agent-sdk', m.version('claude-agent-sdk'))"
 
 COPY start-shop.sh /usr/local/bin/start-shop
 COPY restart-shop.sh /usr/local/bin/restart-shop
