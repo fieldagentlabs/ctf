@@ -64,7 +64,7 @@ jobs:
           done
           js=$(docker exec lab sh -c 'cd /opt/juice-shop/frontend/dist/frontend && ls *.js | head -1')
           test "$(code http://shop.fieldagents.test/$js)" = 200
-          for p in /backup.zip /api-docs /profile /b2b /support /vendor /config.json; do
+          for p in /backup.zip /api-docs /profile /b2b /support /vendor /config.json /assets /socket.io; do
             c=$(code "http://shop.fieldagents.test$p"); echo "$p -> $c"; test "$c" = 404
           done
 
