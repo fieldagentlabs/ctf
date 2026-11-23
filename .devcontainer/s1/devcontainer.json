@@ -1,18 +1,19 @@
 {
   "name": "Field Agents: Season 1 (Operation Juice Shop)",
   // Built and published from .devcontainer/image by the private ctf-hq repo.
-  // One shared image for both seasons while there is a single CTF_KEY (D2).
-  "image": "ghcr.io/fieldagentlabs/fa-lab:v1",
+  // v2 adds the nginx front, Juice Shop source, deploy-shop, and the K7 canary.
+  "image": "ghcr.io/fieldagentlabs/fa-lab:v2",
   "hostRequirements": { "cpus": 2 },
   // SSH lets `gh codespace ssh` work (maintainer tests, and players who prefer a local terminal).
   "features": {
     "ghcr.io/devcontainers/features/sshd:1.1.0": {}
   },
-  "forwardPorts": [3000],
+  "forwardPorts": [80, 3000],
   "portsAttributes": {
-    "3000": { "label": "Juice Shop", "onAutoForward": "notify" }
+    "80": { "label": "Shop via nginx (logged)", "onAutoForward": "notify" },
+    "3000": { "label": "Juice Shop direct", "onAutoForward": "silent" }
   },
-  "postCreateCommand": "sudo ln -sf ${containerWorkspaceFolder}/platform/control/control.py /usr/local/bin/control",
+  "postCreateCommand": "sudo ln -sf ${containerWorkspaceFolder}/platform/control/control.py /usr/local/bin/control && init-juice-shop-src",
   "postStartCommand": "start-shop",
   "secrets": {
     "ANTHROPIC_API_KEY": {
