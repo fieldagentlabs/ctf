@@ -29,6 +29,7 @@ class FaApiTest(unittest.TestCase):
         self.assertAlmostEqual(u.cost(), 0.61)
         self.assertAlmostEqual(u.cost(batch=True), 0.305)
         self.assertIsNone(fa_api.Usage("unknown-model").cost())
+        self.assertIsNotNone(fa_api.Usage("claude-haiku-5-5-20261101").cost())
         self.assertIn("1 calls", u.summary())
 
 

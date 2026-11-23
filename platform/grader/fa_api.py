@@ -12,7 +12,8 @@ import os
 # Approved Nov 23, 2026 (open-questions D20). Override with FA_MODEL.
 DEFAULT_MODEL = "claude-haiku-5-5"
 # USD per million tokens, for prompts of 100K tokens or fewer. Message Batches cost half.
-# Cache rates follow the usual multipliers (reads 0.1x input, 5-minute writes 1.25x input).
+# Checked against platform.claude.com/docs/en/about-claude/pricing on Nov 23, 2026 (5-minute cache
+# writes; 1-hour writes are $0.20). Message Batches halve every rate, cache included.
 PRICES = {
     "claude-haiku-5-5": {"input": 0.10, "output": 0.50, "cache_read": 0.01, "cache_write": 0.125},
 }
@@ -55,7 +56,7 @@ class Usage:
             self.totals[f] += getattr(usage, f, None) or 0
 
     def cost(self, batch: bool = False):
-        p = PRICES.get(self.model)
+        p = next((v for k, v in PRICES.items() if self.model == k or self.model.startswith(k + "-")), None)
         if p is None:
             return None
         t = self.totals
