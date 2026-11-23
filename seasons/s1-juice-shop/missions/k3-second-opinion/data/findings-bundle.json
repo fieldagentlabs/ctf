@@ -1,0 +1,141 @@
+{
+  "tool": "Simulated scanner export (Field Agents training data)",
+  "target": "OWASP Juice Shop v20.4.0 (/workspaces/juice-shop)",
+  "note": "Scanner output is a claim, not a verdict. Some findings and patches are wrong.",
+  "findings": [
+    {
+      "id": "F-01",
+      "title": "SQL injection in user login",
+      "file": "routes/login.ts",
+      "lines": "34",
+      "cwe": "CWE-89",
+      "severity": "critical",
+      "confidence": "high",
+      "description": "The login handler builds its SQL statement by interpolating request fields into a template string."
+    },
+    {
+      "id": "F-02",
+      "title": "SQL injection in product search",
+      "file": "routes/search.ts",
+      "lines": "23",
+      "cwe": "CWE-89",
+      "severity": "critical",
+      "confidence": "high",
+      "description": "The search handler interpolates the q query parameter into a LIKE clause of a raw SQL statement."
+    },
+    {
+      "id": "F-03",
+      "title": "Open redirect through allowlist substring match",
+      "file": "lib/insecurity.ts",
+      "lines": "136",
+      "cwe": "CWE-601",
+      "severity": "medium",
+      "confidence": "high",
+      "description": "isRedirectAllowed accepts a target if it contains any allowlisted URL anywhere in the string."
+    },
+    {
+      "id": "F-04",
+      "title": "SQL injection in product search fix",
+      "file": "data/static/codefixes/dbSchemaChallenge_2_correct.ts",
+      "lines": "5-7",
+      "cwe": "CWE-89",
+      "severity": "critical",
+      "confidence": "high",
+      "description": "A raw sequelize.query call on the Products table uses the search criteria from the request."
+    },
+    {
+      "id": "F-05",
+      "title": "Poison null byte in file server",
+      "file": "routes/fileServer.ts",
+      "lines": "45",
+      "cwe": "CWE-158",
+      "severity": "high",
+      "confidence": "high",
+      "description": "The file server's extension check can be confused by an encoded null byte in the requested file name."
+    },
+    {
+      "id": "F-06",
+      "title": "Code injection in B2B order processing",
+      "file": "routes/b2bOrder.ts",
+      "lines": "18-31",
+      "cwe": "CWE-94",
+      "severity": "critical",
+      "confidence": "high",
+      "description": "Order lines from the request body are evaluated in a JavaScript sandbox that is not a security boundary."
+    },
+    {
+      "id": "F-07",
+      "title": "Hardcoded secret in source",
+      "file": "test/server/insecurity.unit.test.ts",
+      "lines": "202",
+      "cwe": "CWE-798",
+      "severity": "high",
+      "confidence": "high",
+      "description": "A 64-character hexadecimal secret is hardcoded in the repository."
+    },
+    {
+      "id": "F-08",
+      "title": "Server-side request forgery in profile image upload",
+      "file": "routes/profileImageUrlUpload.ts",
+      "lines": "24",
+      "cwe": "CWE-918",
+      "severity": "high",
+      "confidence": "high",
+      "description": "The server fetches an arbitrary user-supplied URL to download a profile image."
+    },
+    {
+      "id": "F-09",
+      "title": "Broken access control on baskets",
+      "file": "routes/basket.ts",
+      "lines": "21",
+      "cwe": "CWE-639",
+      "severity": "high",
+      "confidence": "high",
+      "description": "Baskets are loaded by the id in the URL without checking the basket belongs to the requesting user."
+    },
+    {
+      "id": "F-10",
+      "title": "NoSQL injection in product review update",
+      "file": "routes/updateProductReviews.ts",
+      "lines": "18-20",
+      "cwe": "CWE-943",
+      "severity": "high",
+      "confidence": "high",
+      "description": "The review update builds its MongoDB-style selector from the request body, so operators in the body change which reviews match."
+    },
+    {
+      "id": "F-11",
+      "title": "Stored XSS in product reviews",
+      "file": "frontend/src/app/product-details/product-details.component.html",
+      "lines": "73",
+      "cwe": "CWE-79",
+      "severity": "high",
+      "confidence": "high",
+      "description": "Review messages written by users are rendered in the product details dialog."
+    },
+    {
+      "id": "F-12",
+      "title": "XML external entity processing in file upload",
+      "file": "routes/fileUpload.ts",
+      "lines": "81",
+      "cwe": "CWE-611",
+      "severity": "high",
+      "confidence": "high",
+      "description": "Uploaded XML is parsed with external entity expansion enabled."
+    }
+  ],
+  "patches": [
+    {
+      "id": "P-01",
+      "addresses": "F-01",
+      "description": "Parameterize the login query with Sequelize replacements.",
+      "diff": "--- a/routes/login.ts\n+++ b/routes/login.ts\n@@ -31,7 +31,7 @@\n \n   return (req: Request, res: Response, next: NextFunction) => {\n     verifyPreLoginChallenges(req) // vuln-code-snippet hide-line\n-    models.sequelize.query(`SELECT * FROM Users WHERE email = '${req.body.email || ''}' AND password = '${security.hash(req.body.password || '')}' AND deletedAt IS NULL`, { model: UserModel, plain: true }) // vuln-code-snippet vuln-line loginAdminChallenge loginBenderChallenge loginJimChallenge\n+    models.sequelize.query('SELECT * FROM Users WHERE email = :email AND password = :password AND deletedAt IS NULL', { replacements: { email: req.body.email || '', password: security.hash(req.body.password || '') }, model: UserModel, plain: true }) // vuln-code-snippet vuln-line loginAdminChallenge loginBenderChallenge loginJimChallenge\n       .then((authenticatedUser) => { // vuln-code-snippet neutral-line loginAdminChallenge loginBenderChallenge loginJimChallenge\n         const user = utils.queryResultToJson(authenticatedUser)\n         if (user.data?.id && user.data.totpSecret !== '') {\n"
+    },
+    {
+      "id": "P-02",
+      "addresses": "F-02",
+      "description": "Escape single quotes in the search term before it reaches the query.",
+      "diff": "--- a/routes/search.ts\n+++ b/routes/search.ts\n@@ -20,6 +20,7 @@\n   return (req: Request, res: Response, next: NextFunction) => {\n     let criteria: any = req.query.q === 'undefined' ? '' : req.query.q ?? ''\n     criteria = (criteria.length <= 200) ? criteria : criteria.substring(0, 200)\n+    criteria = criteria.replace(\"'\", \"''\") // escape single quotes so the term can't break out of the string\n     models.sequelize.query(`SELECT * FROM Products WHERE ((name LIKE '%${criteria}%' OR description LIKE '%${criteria}%') AND deletedAt IS NULL) ORDER BY name`) // vuln-code-snippet vuln-line unionSqlInjectionChallenge dbSchemaChallenge\n       .then(([products]: any) => {\n         const dataString = JSON.stringify(products)\n"
+    }
+  ]
+}
