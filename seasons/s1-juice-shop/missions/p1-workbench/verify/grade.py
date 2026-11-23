@@ -103,7 +103,7 @@ def main() -> int:
     if missed_attacks:
         hint.append(f"{missed_attacks} attack lines were called normal: what makes a request hostile, not just unusual?")
     report.check(right >= PASS_MARK, f"At least {PASS_MARK} of {len(cases)} labels are right ({right})",
-                 " ".join(h + "." for h in hint) + " Add examples of both kinds to the prompt and compare versions "
+                 " ".join(h if h.endswith("?") else h + "." for h in hint) + " Add examples of both kinds to the prompt and compare versions "
                  "in the Workbench.")
     print(f"  Usage: {usage.summary()}")
     return report.finish(MISSION, "Workbench prompt holds up.")
