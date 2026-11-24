@@ -8,10 +8,30 @@ Your agent just woke up in a safe house with no memory. It doesn't know its name
 
 Your job as its handler is to write the standing orders it reads every time it wakes up, then prove the agent can operate by finding something the Juice Shop tried to hide.
 
+## Before you start: open your safe house
+
+Everything in this mission happens in a GitHub Codespace: a workspace in your browser with Claude Code, Juice Shop, and the grader already installed.
+
+1. Go to [github.com/fieldagentlabs/ctf](https://github.com/fieldagentlabs/ctf), click **Code**, then **Codespaces**, then the **...** menu, then **New with options**. Under **Dev container configuration**, pick **Field Agents: Season 0 (The Farm)** and click **Create codespace**. The first start takes a few minutes.
+2. Open a terminal: in the Codespace's menu, **Terminal**, then **New Terminal** (or press Ctrl+\`). It opens in `/workspaces/ctf`, the repo folder. Every command in this mission runs in this terminal.
+3. **Juice Shop starts by itself** when the Codespace starts. To open it, go to the **Ports** tab (next to Terminal), find port **3000 (Juice Shop)**, and click the globe icon. You should see the shop.
+4. If port 3000 isn't there, or the page doesn't load, start the shop yourself in the terminal and wait for "Juice Shop is up":
+
+   ```bash
+   start-shop
+   ```
+
 ## Objectives
 
-1. Check that Juice Shop is running in CTF mode. The Codespace starts it for you: open the forwarded port 3000 in your browser.
-2. Go to your safe house (`cd safehouse`), run `claude`, then `/init` to create `safehouse/CLAUDE.md`.
+1. Check that Juice Shop is running in CTF mode: open it from the **Ports** tab (port 3000), as above.
+2. In the terminal, go to your safe house and start Claude Code:
+
+   ```bash
+   cd safehouse
+   claude
+   ```
+
+   Then type `/init` to create `safehouse/CLAUDE.md`.
 3. Rewrite that file into standing orders with these sections:
    - `## Identity`: who the agent is and who it works for
    - `## Mission`: what it's there to do
@@ -19,7 +39,13 @@ Your job as its handler is to write the standing orders it reads every time it w
    - `## Rules of engagement`: at least three rules, including at least one hard "never"
    - `## Reporting`: how it should report findings back to you
 4. With your agent's help, find and open the Juice Shop's hidden Score Board.
-5. Run `control verify f2`. If everything passes, it prints your flag. Submit it on the Field Agents CTFd site.
+5. Check your work with the grader. Run it in the **Codespace terminal**, not inside Claude: type `/exit` to leave Claude, or open a second terminal with the **+** button. It works from any folder:
+
+   ```bash
+   control verify f2
+   ```
+
+   It shows what passed, gives a hint for anything that didn't, and prints your flag when everything passes. Submit the flag on the Field Agents CTFd site (the **Submit your flag** button on the lab guide).
 
 ## What the grader checks
 
