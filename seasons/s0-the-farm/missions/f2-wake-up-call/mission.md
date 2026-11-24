@@ -12,7 +12,7 @@ Your job as its handler is to write the standing orders it reads every time it w
 
 Everything in this mission happens in a GitHub Codespace: a workspace in your browser with Claude Code, Juice Shop, and the grader already installed.
 
-1. Go to [github.com/fieldagentlabs/ctf](https://github.com/fieldagentlabs/ctf), click **Code**, then **Codespaces**, then the **...** menu, then **New with options**. Under **Dev container configuration**, pick **Field Agents: Season 0 (The Farm)** and click **Create codespace**. The first start takes a few minutes.
+1. **[Open the Season 0 safe house](https://github.com/codespaces/new?hide_repo_select=true&repo=1467991610&ref=main&machine=basicLinux32gb&devcontainer_path=.devcontainer%2Fs0%2Fdevcontainer.json)**. GitHub opens **Create codespace** with everything set (branch `main`, **Field Agents: Season 0 (The Farm)**, a 2-core machine). Optionally paste your API key under **Recommended secrets**, then click **Create codespace**. The first start takes a few minutes. Already have one? Reopen it from [github.com/codespaces](https://github.com/codespaces).
 2. Open a terminal: in the Codespace's menu, **Terminal**, then **New Terminal** (or press Ctrl+\`). It opens in `/workspaces/ctf`, the repo folder. Every command in this mission runs in this terminal.
 3. **Juice Shop starts by itself** when the Codespace starts. To open it, go to the **Ports** tab (next to Terminal), find port **3000 (Juice Shop)**, and click the globe icon. You should see the shop.
 4. If port 3000 isn't there, or the page doesn't load, start the shop yourself in the terminal and wait for "Juice Shop is up":
