@@ -21,6 +21,18 @@
   },
   "customizations": {
     "codespaces": { "openFiles": ["safehouse/README.md"] },
-    "vscode": { "extensions": ["ms-python.python"] }
+    // The file list shows only safehouse/ and this season's missions (briefings, data, P4's bot).
+    // Maintainer files, graders (verify/), and the other season are hidden, not removed: the
+    // terminal, control verify, and Claude Code's lab context (root CLAUDE.md) still work.
+    "vscode": {
+      "extensions": ["ms-python.python"],
+      "settings": {
+      "files.exclude": {
+        ".devcontainer": true, ".github": true, "platform": true, "tools": true,
+        ".gitignore": true, "CONTRIBUTING.md": true, "CLAUDE.md": true, "README.md": true,
+        "**/verify": true, "seasons/s1-juice-shop": true
+      }
+      }
+    }
   }
 }
