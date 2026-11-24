@@ -31,6 +31,8 @@ Everything in this mission happens in a GitHub Codespace: a workspace in your br
    claude
    ```
 
+   The first time, Claude Code asks you to sign in. If you choose your Claude plan, signing in from a Codespace works a little differently: at the login screen, press `c` to copy the sign-in link, open it in your browser, and sign in. The browser then shows a **code** (if it shows a `localhost` connection error instead, that's expected: use the link from the terminal). Paste the code at the `Paste code here` prompt and press Enter. If pasting does nothing, quit and run `claude auth login` instead.
+
    Then type `/init` to create `safehouse/CLAUDE.md`.
 3. Rewrite that file into standing orders with these sections:
    - `## Identity`: who the agent is and who it works for
