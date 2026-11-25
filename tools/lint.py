@@ -2,7 +2,8 @@
 """Repo lint for the public Field Agents repo. Stdlib only.
 
 Checks every tracked text file for: long dashes, real-looking flags, and
-keys or tokens. Checks every mission.md for the unofficial disclaimer.
+keys or tokens. Fails if a mission.md appears: briefs live in the private repo and reach
+players only through the Field Agents site.
 Usage: python3 tools/lint.py   (exits 1 on any problem)
 """
 from __future__ import annotations
@@ -18,7 +19,6 @@ import fa_grader as fa  # noqa: E402
 
 DASHES = re.compile("[" + chr(0x2013) + chr(0x2014) + "]")  # en and em dash
 REAL_FLAG = re.compile(r"FA\{s\d+_[a-z0-9]+_[0-9a-f]{12}\}", re.I)
-DISCLAIMER = "Not affiliated with or endorsed by Anthropic"
 BINARY = {".png", ".jpg", ".jpeg", ".gif", ".pdf", ".gz", ".zip", ".ico", ".woff", ".woff2"}
 SKIP = {"platform/grader/tests/test_fa_grader.py"}  # holds fake secrets on purpose
 
@@ -50,8 +50,8 @@ def main() -> int:
                 problems.append(f"{rel}:{n}: looks like a real flag")
             if rel not in SKIP and real_secrets(line):
                 problems.append(f"{rel}:{n}: looks like a key or token")
-        if path.name == "mission.md" and DISCLAIMER not in text:
-            problems.append(f"{rel}: missing the unofficial disclaimer")
+        if path.name == "mission.md":
+            problems.append(f"{rel}: mission briefs belong in ctf-hq (players read them on the site), not here")
 
     for p in problems:
         print(p)
