@@ -1,0 +1,6 @@
+# No blank issues: every report goes through a form with the no-spoilers check.
+blank_issues_enabled: false
+contact_links:
+  - name: Field Agents site (lab guides, challenges, scoreboard)
+    url: https://ctf.fieldagentlabs.com
+    about: Mission briefings, hints, and flag submission live on the site.
