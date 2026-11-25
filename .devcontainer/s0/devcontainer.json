@@ -21,7 +21,7 @@
   },
   "customizations": {
     "codespaces": { "openFiles": ["safehouse/README.md"] },
-    // The file list shows only safehouse/ and this season's missions (briefings, data, P4's bot).
+    // The file list shows only safehouse/ and this season's missions (data, P4's bot).
     // Maintainer files, graders (verify/), and the other season are hidden, not removed: the
     // terminal, control verify, and Claude Code's lab context (root CLAUDE.md) still work.
     "vscode": {
