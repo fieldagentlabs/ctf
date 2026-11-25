@@ -1,0 +1,81 @@
+name: Mission or grader problem
+description: A mission brief, its data, or its grader doesn't work the way it should.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **This repo is public.** Everyone can read issues, including players who haven't finished the mission.
+        Don't post flags, answers, or solutions, even partial ones. Describe what went wrong, not how you solved it.
+
+        Stuck on a mission rather than hitting a bug? Use the hints on the mission's challenge in the Field Agents site.
+  - type: dropdown
+    id: mission
+    attributes:
+      label: Mission
+      options:
+        - "S0-F1 First Contact"
+        - "S0-F2 Wake Up Call"
+        - "S0-F3 Radio Check"
+        - "S1-C1 Morning Briefing"
+        - "S1-C2 Paper Trail"
+        - "S1-C3 Bad Catch"
+        - "S1-C4 Standing Orders"
+        - "S1-C5 Dossier"
+        - "S1-C6 Situation Room"
+        - "S1-K1 Shop Floor"
+        - "S1-K2 Sweep"
+        - "S1-K3 Second Opinion"
+        - "S1-K4 Patch the Shop"
+        - "S1-K5 Catch Yourself"
+        - "S1-K6 One Shot"
+        - "S1-K7 Tripwire"
+        - "S1-K8 After Dark"
+        - "S1-P1 Workbench"
+        - "S1-P2 Night Shift"
+        - "S1-P3 Desk Officer"
+        - "S1-P4 Juicy Guard"
+        - "S1-P5 Handler"
+        - "Other or more than one"
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you did, and what went wrong. Leave out your answers and your approach to the puzzle itself.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Grader or terminal output (optional)
+      description: Paste the failing output. A grader only prints a flag when everything passes; if yours did, remove the flag before posting. Remove any API key too.
+      render: text
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where were you running it?
+      options:
+        - "Field Agents Codespace"
+        - "claude.ai (chat missions)"
+        - "Claude Console"
+        - "My own machine"
+    validations:
+      required: true
+  - type: checkboxes
+    id: no-spoilers
+    attributes:
+      label: No spoilers
+      options:
+        - label: This issue contains no flags, answers, solutions, or API keys.
+          required: true
+  - type: markdown
+    attributes:
+      value: "*Unofficial community project. Not affiliated with or endorsed by Anthropic.*"

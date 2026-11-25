@@ -1,0 +1,52 @@
+name: Setup problem
+description: The Codespace, Juice Shop, sign-in, or the control CLI won't start or behaves oddly.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **This repo is public.** Don't post flags, answers, solutions, or API keys. Check your logs for keys before pasting them.
+  - type: dropdown
+    id: area
+    attributes:
+      label: What's not working
+      options:
+        - "Creating or opening the Codespace"
+        - "Juice Shop (port 3000)"
+        - "Signing in to Claude Code"
+        - "The control CLI (control verify ...)"
+        - "Something else"
+    validations:
+      required: true
+  - type: dropdown
+    id: season
+    attributes:
+      label: Safe house
+      options:
+        - "Season 0 (The Farm)"
+        - "Season 1 (Operation Juice Shop)"
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: The steps you took and what you saw. Error messages help most.
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Error or terminal output (optional)
+      description: Remove any API key or token before posting.
+      render: text
+  - type: checkboxes
+    id: no-spoilers
+    attributes:
+      label: No secrets or spoilers
+      options:
+        - label: This issue contains no flags, answers, solutions, or API keys.
+          required: true
+  - type: markdown
+    attributes:
+      value: "*Unofficial community project. Not affiliated with or endorsed by Anthropic.*"
