@@ -7,7 +7,7 @@ Maintainers: run Claude Code from `ctf-hq` with `--add-dir ../ctf`. The root `CL
 ## Layout
 
 - `platform/grader/`: shared grader toolkit (`fa_grader.py`) and its tests
-- `seasons/<season>/missions/<id>-<slug>/`: `data/` and `verify/grade.py` (whichever the mission needs). Briefs (`mission.md`) live in `ctf-hq` and reach players only through the site.
+- `seasons/<season>/missions/<id>-<slug>/`: `data/` and `verify/grade.py` (whichever the mission needs in the Codespace). Chat missions (F1, C1 to C6) have no folder here: their files are attachments on the site. Briefs (`mission.md`) live in `ctf-hq` and reach players only through the site.
 - `safehouse/`: where players run `claude` and keep their own agent files
 - `.devcontainer/`: Codespace configs, one per season
 - `tools/lint.py`: repo lint, run in CI
