@@ -31,6 +31,10 @@ def real_secrets(line: str) -> list:
     return [s for s in fa.find_secrets(line) if not KEY_PLACEHOLDER.fullmatch(s)]
 
 
+# Chat missions (F1, C1 to C6) happen in claude.ai, not the Codespace: their files are CTFd attachments.
+CHAT_MISSION = re.compile(r"seasons/[^/]+/missions/(f1|c\d+)-")
+
+
 def tracked_files() -> list:
     out = subprocess.run(["git", "ls-files", "-z"], cwd=ROOT, capture_output=True, text=True, check=True).stdout
     return [p for p in out.split("\0") if p]
@@ -40,6 +44,8 @@ def main() -> int:
     problems = []
     for rel in tracked_files():
         path = ROOT / rel
+        if CHAT_MISSION.match(rel):
+            problems.append(f"{rel}: chat-mission files are CTFd attachments (kept in ctf-hq), not here")
         if path.suffix.lower() in BINARY or not path.is_file():
             continue
         text = path.read_text(encoding="utf-8", errors="replace")

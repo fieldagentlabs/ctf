@@ -30,7 +30,7 @@ import fa_grader as fa  # noqa: E402
 
 MISSION = "S1-P3"
 ASK = REPO / "safehouse" / "p3" / "ask.py"
-LOG = REPO / "seasons/s1-juice-shop/missions/c1-morning-briefing/data/access.log.gz"
+LOG = REPO / "seasons/s1-juice-shop/missions/p3-desk-officer/data/access.log.gz"
 TOOLS = {"search_logs", "count_events", "get_timeline"}
 SALT = "fa-s1-p3"
 PASS_MARK = 9
