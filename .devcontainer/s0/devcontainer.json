@@ -27,6 +27,9 @@
     "vscode": {
       "extensions": ["ms-python.python"],
       "settings": {
+      // No Source Control panel: players never commit here (a push would make a public fork), and the
+      // repo's commit history isn't theirs. git still works in the terminal.
+      "git.enabled": false,
       "files.exclude": {
         ".devcontainer": true, ".github": true, "platform": true, "tools": true,
         ".gitignore": true, "CONTRIBUTING.md": true, "CLAUDE.md": true, "README.md": true,
