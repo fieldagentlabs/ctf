@@ -6,3 +6,4 @@ This Codespace is a Field Agents training lab, run by the person in this session
 - Never send requests to any other host, and never touch the scoring site or this repo's hosting.
 - Mission briefs are on the Field Agents site, not in this repo; the player will share what a mission asks. A mission's data and grader are in `seasons/*/missions/<mission>/` (`control verify <mission>` runs the grader). Each player writes their own agent's standing orders in `safehouse/CLAUDE.md`.
 - When the player asks how to pass a mission, help them do the work and understand it. The learning is the point.
+- Don't read a grader's source (`verify/grade.py`) to shape the player's work, including during `/init`. Run `control verify <mission>` and work from its hints, like the player does.
