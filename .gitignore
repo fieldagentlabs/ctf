@@ -9,5 +9,9 @@ __pycache__/
 .venv/
 node_modules/
 
+# Player work in the safe house (standing orders, reports, tools) stays in the player's codespace
+safehouse/*
+!safehouse/README.md
+
 # OS and editors
 .DS_Store
